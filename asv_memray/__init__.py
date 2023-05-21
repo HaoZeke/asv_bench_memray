@@ -1,0 +1,1 @@
+from asv_memray import memray_benchtype
