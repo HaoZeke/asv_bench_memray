@@ -1,0 +1,48 @@
+[tool.pdm]
+
+[project]
+name = "asv_memray"
+version = "0.0.1"
+description = "A memray plugin for asv"
+authors = [
+    { name = "Rohit Goswami", email = "rgoswami@quansight.com" },
+]
+maintainers = [
+    { name = "Rohit Goswami", email = "rgoswami@quansight.com" },
+]
+dependencies = [
+    "memray>=1.7.0",
+    "asvcore>=0.0.1",
+]
+requires-python = ">=3.8"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.optional-dependencies]
+lint = [
+    "ruff>=0.0.265",
+    "black>=23.3.0",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.ruff]
+line-length = 88
+extend-ignore = [
+    "E741", # Do not use variables named 'I', 'O', or 'l'
+]
+select = [
+  "E",   # pycodestyle
+  "F",   # pyflakes
+  "UP",  # pyupgrade
+  "I001", # isort
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.pdm.scripts]
+lint = {composite = ["ruff --fix asvcore/", "black asvcore/"]}
