@@ -1,6 +1,8 @@
-from asvcore.benchmarks._base import Benchmark
-from asvcore.benchmarks._exceptions import NotRequired
+from asv_runner.benchmarks._base import Benchmark
+from asv_runner.benchmarks._exceptions import NotRequired
 
+from pathlib import Path
+import tempfile
 import uuid
 import re
 
@@ -9,6 +11,7 @@ try:
     from memray import FileReader
 except ImportError:
     raise NotRequired("RayMemBenchmark not requested or memray not found")
+
 
 class RayMemBenchmark(Benchmark):
     """
@@ -24,7 +27,6 @@ class RayMemBenchmark(Benchmark):
         pass
 
     def run(self, *param):
-
         u_id = uuid.uuid4()
         temp_dir = tempfile.gettempdir()
         tfile_loc = Path(f"{temp_dir}/{u_id}.bin")
@@ -34,5 +36,6 @@ class RayMemBenchmark(Benchmark):
             self.func(*param)
         freader = FileReader(str(tfile_loc))
         return freader.metadata.peak_memory
+
 
 export_as_benchmark = [RayMemBenchmark]
