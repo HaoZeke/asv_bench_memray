@@ -1,10 +1,14 @@
-from asv_runner.benchmarks._base import Benchmark
-from asv_runner.benchmarks._exceptions import NotRequired
-
-from pathlib import Path
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2023--present Rohit Goswami <rgoswami[at]ieee[dot]org>
+# For full license text, see LICENSE file in the root directory of this source tree
+# or visit https://opensource.org/licenses/MIT
+import re
 import tempfile
 import uuid
-import re
+from pathlib import Path
+
+from asv_runner.benchmarks._base import Benchmark
+from asv_runner.benchmarks._exceptions import NotRequired
 
 try:
     import memray
