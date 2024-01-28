@@ -8,6 +8,12 @@ This project uses [*towncrier*](https://towncrier.readthedocs.io/) and the chang
 
 <!-- towncrier release notes start -->
 
+## [0.1.1](https://github.com/HaoZeke/asv_bench_memray/tree/0.1.1) - 2024-01-28
+
+
+No significant changes.
+
+
 ## [0.1.0](https://github.com/HaoZeke/asv_bench_memray/tree/0.1.0) - 2024-01-28
 
 

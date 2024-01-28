@@ -9,7 +9,7 @@
 project = 'ASV Memray Benchmark'
 copyright = '2024, Rohit Goswami'
 author = 'Rohit Goswami'
-release = '0.1.0'
+release = '0.1.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
