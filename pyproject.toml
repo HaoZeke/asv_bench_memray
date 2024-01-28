@@ -3,10 +3,10 @@ name = "asv_bench_memray"
 version = "0.0.1"
 description = "A memray benchmark plugin for asv"
 authors = [
-    { name = "Rohit Goswami", email = "rgoswami@quansight.com" },
+    { name = "Rohit Goswami", email = "rgoswami@ieee.org" },
 ]
 maintainers = [
-    { name = "Rohit Goswami", email = "rgoswami@quansight.com" },
+    { name = "Rohit Goswami", email = "rgoswami@ieee.org" },
 ]
 dependencies = [
     "memray>=1.7.0",
@@ -15,6 +15,11 @@ dependencies = [
 requires-python = ">=3.8"
 readme = "README.md"
 license = {text = "MIT"}
+
+[project.urls]
+Documentation = "https://github.com/HaoZeke/asv_bench_memray#readme"
+Issues = "https://github.com/HaoZeke/asv_bench_memray/issues"
+Source = "https://github.com/HaoZeke/asv_bench_memray"
 
 [project.optional-dependencies]
 lint = [
