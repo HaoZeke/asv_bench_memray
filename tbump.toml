@@ -23,15 +23,22 @@ tag_template = "v{new_version}"
 # section containing the path of the file, relative to the
 # tbump.toml location.
 [[file]]
-src = "..."
+src = "pyproject.toml"
+search = 'version = "{current_version}"'
+[[file]]
+src = "doc/source/conf.py"
 
 # You can specify a list of commands to
 # run after the files have been patched
 # and before the git commit is made
 
-#  [[before_commit]]
-#  name = "check changelog"
-#  cmd = "grep -q {new_version} Changelog.rst"
+[[before_commit]]
+name = "Make changelog"
+cmd = "towncrier build --version={new_version}"
+
+[[before_commit]]
+name = "Check changelog"
+cmd = "grep -q {new_version} CHANGELOG.md"
 
 # Or run some commands after the git tag and the branch
 # have been pushed:
