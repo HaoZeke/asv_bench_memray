@@ -1,9 +1,7 @@
-[tool.pdm]
-
 [project]
-name = "asv_memray"
+name = "asv_bench_memray"
 version = "0.0.1"
-description = "A memray plugin for asv"
+description = "A memray benchmark plugin for asv"
 authors = [
     { name = "Rohit Goswami", email = "rgoswami@quansight.com" },
 ]
@@ -12,7 +10,7 @@ maintainers = [
 ]
 dependencies = [
     "memray>=1.7.0",
-    "asvcore>=0.0.1",
+    "asv_runner>=0.1.0",
 ]
 requires-python = ">=3.8"
 readme = "README.md"
@@ -25,8 +23,8 @@ lint = [
 ]
 
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.ruff]
 line-length = 88
@@ -42,7 +40,4 @@ select = [
 
 [tool.black]
 line-length = 88
-target-version = ['py38']
-
-[tool.pdm.scripts]
-lint = {composite = ["ruff --fix asvcore/", "black asvcore/"]}
+target-version = ['py39']
