@@ -26,6 +26,10 @@ lint = [
     "ruff>=0.0.265",
     "black>=23.3.0",
 ]
+rel = [
+    "tbump",
+    "towncrier",
+]
 
 [build-system]
 requires = ["hatchling"]
