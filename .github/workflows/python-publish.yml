@@ -1,10 +1,9 @@
 name: Publish to PyPI
-on:
-  release:
-    types: [published]
+on: [push, pull_request]
 jobs:
   pypi-publish:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     environment:
       name: pypi
       url: https://pypi.org/p/asv_bench_memray
