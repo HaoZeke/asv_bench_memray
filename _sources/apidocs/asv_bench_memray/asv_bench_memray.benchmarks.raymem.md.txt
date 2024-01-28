@@ -1,0 +1,80 @@
+# {py:mod}`asv_bench_memray.benchmarks.raymem`
+
+```{py:module} asv_bench_memray.benchmarks.raymem
+```
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem
+:allowtitles:
+```
+
+## Module Contents
+
+### Classes
+
+````{list-table}
+:class: autosummary longtable
+:align: left
+
+* - {py:obj}`RayMemBenchmark <asv_bench_memray.benchmarks.raymem.RayMemBenchmark>`
+  - ```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark
+    :summary:
+    ```
+````
+
+### Data
+
+````{list-table}
+:class: autosummary longtable
+:align: left
+
+* - {py:obj}`export_as_benchmark <asv_bench_memray.benchmarks.raymem.export_as_benchmark>`
+  - ```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.export_as_benchmark
+    :summary:
+    ```
+````
+
+### API
+
+`````{py:class} RayMemBenchmark(name, func, attr_sources)
+:canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark
+
+Bases: {py:obj}`asv_runner.benchmarks._base.Benchmark`
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark
+```
+
+```{rubric} Initialization
+```
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark.__init__
+```
+
+````{py:attribute} name_regex
+:canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark.name_regex
+:value: >
+   'compile(...)'
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark.name_regex
+```
+
+````
+
+````{py:method} run(*param)
+:canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark.run
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark.run
+```
+
+````
+
+`````
+
+````{py:data} export_as_benchmark
+:canonical: asv_bench_memray.benchmarks.raymem.export_as_benchmark
+:value: >
+   None
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.export_as_benchmark
+```
+
+````

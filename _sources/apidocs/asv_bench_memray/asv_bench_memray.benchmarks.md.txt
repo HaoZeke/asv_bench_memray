@@ -1,0 +1,17 @@
+# {py:mod}`asv_bench_memray.benchmarks`
+
+```{py:module} asv_bench_memray.benchmarks
+```
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks
+:allowtitles:
+```
+
+## Submodules
+
+```{toctree}
+:titlesonly:
+:maxdepth: 1
+
+asv_bench_memray.benchmarks.raymem
+```
