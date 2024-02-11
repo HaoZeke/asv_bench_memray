@@ -61,6 +61,13 @@ Which should result in something roughly like:
 
    ASV_RUNNER_PATH="../asv_runner" asv run --bench sum  8.72s user 3.04s system 99% cpu 11.877 total
 
+
+.. note::
+
+    The GitHub repository at `asv_samples
+    <https://github.com/HaoZeke/asv_samples>`_ has a dedicated branch for
+    testing ``asv_bench_memray``.
+
 License
 -------
 
