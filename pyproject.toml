@@ -1,6 +1,5 @@
 [project]
 name = "asv_bench_memray"
-version = "0.1.1"
 description = "A memray benchmark plugin for asv"
 authors = [
     { name = "Rohit Goswami", email = "rgoswami@ieee.org" },
@@ -15,6 +14,7 @@ dependencies = [
 requires-python = ">=3.8"
 readme = "README.md"
 license = {text = "MIT"}
+dynamic = ["version"]
 
 [project.urls]
 Documentation = "https://haozeke.github.io/asv_bench_memray/"
@@ -31,8 +31,14 @@ rel = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[build.hooks.vcs]
+version-file = "__init__.py"
 
 [tool.ruff]
 line-length = 88
