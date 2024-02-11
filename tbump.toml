@@ -23,9 +23,6 @@ tag_template = "v{new_version}"
 # section containing the path of the file, relative to the
 # tbump.toml location.
 [[file]]
-src = "pyproject.toml"
-search = 'version = "{current_version}"'
-[[file]]
 src = "doc/source/conf.py"
 
 # You can specify a list of commands to

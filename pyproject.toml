@@ -1,6 +1,5 @@
 [project]
 name = "asv_bench_memray"
-version = "0.1.1"
 description = "A memray benchmark plugin for asv"
 authors = [
     { name = "Rohit Goswami", email = "rgoswami@ieee.org" },
@@ -10,11 +9,12 @@ maintainers = [
 ]
 dependencies = [
     "memray>=1.7.0",
-    "asv_runner>=0.1.0",
+    "asv_runner>=0.2.0",
 ]
 requires-python = ">=3.8"
 readme = "README.md"
 license = {text = "MIT"}
+dynamic = ["version"]
 
 [project.urls]
 Documentation = "https://haozeke.github.io/asv_bench_memray/"
@@ -24,7 +24,6 @@ Source = "https://github.com/HaoZeke/asv_bench_memray"
 [project.optional-dependencies]
 lint = [
     "ruff>=0.0.265",
-    "black>=23.3.0",
 ]
 rel = [
     "tbump",
@@ -32,8 +31,14 @@ rel = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[build.hooks.vcs]
+version-file = "__init__.py"
 
 [tool.ruff]
 line-length = 88
@@ -47,11 +52,11 @@ select = [
   "I001", # isort
 ]
 
-[tool.black]
-line-length = 88
-target-version = ['py39']
-
 [tool.towncrier]
+package = "asv_bench_memray"
+package_dir = "asv_bench_memray"
+all_bullets = false
+wrap = true
 directory = "doc/changelog.d"
 filename = "CHANGELOG.md"
 start_string = "<!-- towncrier release notes start -->\n"
@@ -60,31 +65,21 @@ title_format = "## [{version}](https://github.com/HaoZeke/asv_bench_memray/tree/
 issue_format = "[#{issue}](https://github.com/HaoZeke/asv_bench_memray/issues/{issue})"
 
 [[tool.towncrier.type]]
-directory = "security"
-name = "Security"
+directory = "feat"
+name = "New Features"
 showcontent = true
 
 [[tool.towncrier.type]]
-directory = "removed"
-name = "Removed"
+directory = "api"
+name = "API Changes"
 showcontent = true
 
 [[tool.towncrier.type]]
-directory = "deprecated"
-name = "Deprecated"
+directory = "bugfix"
+name = "Bug Fixes"
 showcontent = true
 
 [[tool.towncrier.type]]
-directory = "added"
-name = "Added"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "changed"
-name = "Changed"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "fixed"
-name = "Fixed"
+directory = "misc"
+name = "Other Changes and Additions"
 showcontent = true
