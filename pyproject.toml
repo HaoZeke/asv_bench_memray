@@ -10,7 +10,7 @@ maintainers = [
 ]
 dependencies = [
     "memray>=1.7.0",
-    "asv_runner>=0.1.0",
+    "asv_runner>=0.2.0",
 ]
 requires-python = ">=3.8"
 readme = "README.md"
