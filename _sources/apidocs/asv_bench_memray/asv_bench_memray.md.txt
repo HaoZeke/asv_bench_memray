@@ -15,3 +15,13 @@
 
 asv_bench_memray.benchmarks
 ```
+
+## Submodules
+
+```{toctree}
+:titlesonly:
+:maxdepth: 1
+
+asv_bench_memray.profiles
+asv_bench_memray.__main__
+```

@@ -1,0 +1,224 @@
+# {py:mod}`asv_bench_memray.profiles`
+
+```{py:module} asv_bench_memray.profiles
+```
+
+```{autodoc2-docstring} asv_bench_memray.profiles
+:allowtitles:
+```
+
+## Module Contents
+
+### Functions
+
+````{list-table}
+:class: autosummary longtable
+:align: left
+
+* - {py:obj}`sanitize_name <asv_bench_memray.profiles.sanitize_name>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.sanitize_name
+    :summary:
+    ```
+* - {py:obj}`profile_key <asv_bench_memray.profiles.profile_key>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.profile_key
+    :summary:
+    ```
+* - {py:obj}`default_profile_dir <asv_bench_memray.profiles.default_profile_dir>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.default_profile_dir
+    :summary:
+    ```
+* - {py:obj}`profile_path_for <asv_bench_memray.profiles.profile_path_for>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.profile_path_for
+    :summary:
+    ```
+* - {py:obj}`load_registry <asv_bench_memray.profiles.load_registry>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.load_registry
+    :summary:
+    ```
+* - {py:obj}`save_registry <asv_bench_memray.profiles.save_registry>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.save_registry
+    :summary:
+    ```
+* - {py:obj}`register_profile <asv_bench_memray.profiles.register_profile>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.register_profile
+    :summary:
+    ```
+* - {py:obj}`load_profiles_json <asv_bench_memray.profiles.load_profiles_json>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.load_profiles_json
+    :summary:
+    ```
+* - {py:obj}`write_profiles_json <asv_bench_memray.profiles.write_profiles_json>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.write_profiles_json
+    :summary:
+    ```
+* - {py:obj}`publish <asv_bench_memray.profiles.publish>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.publish
+    :summary:
+    ```
+* - {py:obj}`cmd_publish <asv_bench_memray.profiles.cmd_publish>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.cmd_publish
+    :summary:
+    ```
+* - {py:obj}`cmd_show <asv_bench_memray.profiles.cmd_show>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.cmd_show
+    :summary:
+    ```
+* - {py:obj}`build_parser <asv_bench_memray.profiles.build_parser>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.build_parser
+    :summary:
+    ```
+* - {py:obj}`main <asv_bench_memray.profiles.main>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.main
+    :summary:
+    ```
+````
+
+### Data
+
+````{list-table}
+:class: autosummary longtable
+:align: left
+
+* - {py:obj}`KIND <asv_bench_memray.profiles.KIND>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.KIND
+    :summary:
+    ```
+* - {py:obj}`SUBDIR <asv_bench_memray.profiles.SUBDIR>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.SUBDIR
+    :summary:
+    ```
+* - {py:obj}`REGISTRY_NAME <asv_bench_memray.profiles.REGISTRY_NAME>`
+  - ```{autodoc2-docstring} asv_bench_memray.profiles.REGISTRY_NAME
+    :summary:
+    ```
+````
+
+### API
+
+````{py:data} KIND
+:canonical: asv_bench_memray.profiles.KIND
+:value: >
+   'memray'
+
+```{autodoc2-docstring} asv_bench_memray.profiles.KIND
+```
+
+````
+
+````{py:data} SUBDIR
+:canonical: asv_bench_memray.profiles.SUBDIR
+:value: >
+   'profiles/memray'
+
+```{autodoc2-docstring} asv_bench_memray.profiles.SUBDIR
+```
+
+````
+
+````{py:data} REGISTRY_NAME
+:canonical: asv_bench_memray.profiles.REGISTRY_NAME
+:value: >
+   'registry.json'
+
+```{autodoc2-docstring} asv_bench_memray.profiles.REGISTRY_NAME
+```
+
+````
+
+````{py:function} sanitize_name(name: str) -> str
+:canonical: asv_bench_memray.profiles.sanitize_name
+
+```{autodoc2-docstring} asv_bench_memray.profiles.sanitize_name
+```
+````
+
+````{py:function} profile_key(bench: str, rev: str | int | None = None) -> str
+:canonical: asv_bench_memray.profiles.profile_key
+
+```{autodoc2-docstring} asv_bench_memray.profiles.profile_key
+```
+````
+
+````{py:function} default_profile_dir(results_dir: str | pathlib.Path | None = None) -> pathlib.Path
+:canonical: asv_bench_memray.profiles.default_profile_dir
+
+```{autodoc2-docstring} asv_bench_memray.profiles.default_profile_dir
+```
+````
+
+````{py:function} profile_path_for(bench: str, profile_dir: pathlib.Path | None = None) -> pathlib.Path
+:canonical: asv_bench_memray.profiles.profile_path_for
+
+```{autodoc2-docstring} asv_bench_memray.profiles.profile_path_for
+```
+````
+
+````{py:function} load_registry(profile_dir: pathlib.Path) -> dict[str, typing.Any]
+:canonical: asv_bench_memray.profiles.load_registry
+
+```{autodoc2-docstring} asv_bench_memray.profiles.load_registry
+```
+````
+
+````{py:function} save_registry(profile_dir: pathlib.Path, registry: dict[str, typing.Any]) -> None
+:canonical: asv_bench_memray.profiles.save_registry
+
+```{autodoc2-docstring} asv_bench_memray.profiles.save_registry
+```
+````
+
+````{py:function} register_profile(bench: str, html_path: pathlib.Path, *, rev: str | int | None = None, profile_dir: pathlib.Path | None = None) -> pathlib.Path
+:canonical: asv_bench_memray.profiles.register_profile
+
+```{autodoc2-docstring} asv_bench_memray.profiles.register_profile
+```
+````
+
+````{py:function} load_profiles_json(html_dir: pathlib.Path) -> dict[str, str]
+:canonical: asv_bench_memray.profiles.load_profiles_json
+
+```{autodoc2-docstring} asv_bench_memray.profiles.load_profiles_json
+```
+````
+
+````{py:function} write_profiles_json(html_dir: pathlib.Path, paths: dict[str, str]) -> pathlib.Path
+:canonical: asv_bench_memray.profiles.write_profiles_json
+
+```{autodoc2-docstring} asv_bench_memray.profiles.write_profiles_json
+```
+````
+
+````{py:function} publish(html_dir: str | pathlib.Path, *, from_dir: str | pathlib.Path | None = None, rev: str | int | None = None, merge: bool = True) -> dict[str, str]
+:canonical: asv_bench_memray.profiles.publish
+
+```{autodoc2-docstring} asv_bench_memray.profiles.publish
+```
+````
+
+````{py:function} cmd_publish(args: argparse.Namespace) -> int
+:canonical: asv_bench_memray.profiles.cmd_publish
+
+```{autodoc2-docstring} asv_bench_memray.profiles.cmd_publish
+```
+````
+
+````{py:function} cmd_show(args: argparse.Namespace) -> int
+:canonical: asv_bench_memray.profiles.cmd_show
+
+```{autodoc2-docstring} asv_bench_memray.profiles.cmd_show
+```
+````
+
+````{py:function} build_parser() -> argparse.ArgumentParser
+:canonical: asv_bench_memray.profiles.build_parser
+
+```{autodoc2-docstring} asv_bench_memray.profiles.build_parser
+```
+````
+
+````{py:function} main(argv: list[str] | None = None) -> int
+:canonical: asv_bench_memray.profiles.main
+
+```{autodoc2-docstring} asv_bench_memray.profiles.main
+```
+````

@@ -1,0 +1,8 @@
+# {py:mod}`asv_bench_memray.__main__`
+
+```{py:module} asv_bench_memray.__main__
+```
+
+```{autodoc2-docstring} asv_bench_memray.__main__
+:allowtitles:
+```

@@ -21,6 +21,22 @@
     ```
 ````
 
+### Functions
+
+````{list-table}
+:class: autosummary longtable
+:align: left
+
+* - {py:obj}`_truthy <asv_bench_memray.benchmarks.raymem._truthy>`
+  - ```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem._truthy
+    :summary:
+    ```
+* - {py:obj}`_want_profile <asv_bench_memray.benchmarks.raymem._want_profile>`
+  - ```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem._want_profile
+    :summary:
+    ```
+````
+
 ### Data
 
 ````{list-table}
@@ -34,6 +50,20 @@
 ````
 
 ### API
+
+````{py:function} _truthy(val) -> bool
+:canonical: asv_bench_memray.benchmarks.raymem._truthy
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem._truthy
+```
+````
+
+````{py:function} _want_profile(attr_sources) -> bool
+:canonical: asv_bench_memray.benchmarks.raymem._want_profile
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem._want_profile
+```
+````
 
 `````{py:class} RayMemBenchmark(name, func, attr_sources)
 :canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark
@@ -63,6 +93,14 @@ Bases: {py:obj}`asv_runner.benchmarks._base.Benchmark`
 :canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark.run
 
 ```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark.run
+```
+
+````
+
+````{py:method} _save_html_report(bin_path: pathlib.Path) -> None
+:canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark._save_html_report
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark._save_html_report
 ```
 
 ````
