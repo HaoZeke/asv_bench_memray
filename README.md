@@ -82,3 +82,22 @@ For more conventions follow the documention of `asv_runner`.
 
 # License
 MIT.
+
+
+## asv-tachyon profile integration
+
+Pair with [asv-tachyon](https://github.com/HaoZeke/asv_tachyon) so Explore can
+open memray HTML for `ray_*` benchmarks:
+
+```bash
+ASV_BENCH_MEMRAY_PROFILE=1 asv run --bench ray_
+# or per-benchmark: ray_sum.ray_save_profile = True
+
+asv publish
+python -m asv_bench_memray profiles publish --html-dir .asv/html
+asv-tachyon serve .asv/html --open
+```
+
+Artifacts: `.asv/profiles/memray/` (or `ASV_BENCH_MEMRAY_PROFILE_DIR`).
+Publish merges into the same `profiles.json` as asv_bench_tachyon.
+

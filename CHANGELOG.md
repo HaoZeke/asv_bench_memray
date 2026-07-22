@@ -1,3 +1,8 @@
+## Unreleased
+
+- Optional memray HTML export (ray_save_profile / ASV_BENCH_MEMRAY_PROFILE)
+- python -m asv_bench_memray profiles publish for asv-tachyon profiles.json
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
