@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Development" href="development.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>ASV Memray Benchmark 0.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
@@ -199,8 +199,8 @@
 <li class="toctree-l4"><a class="reference internal" href="apidocs/asv_bench_memray/asv_bench_memray.benchmarks.raymem.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asv_bench_memray.benchmarks.raymem</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="apidocs/asv_bench_memray/asv_bench_memray.profiles.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asv_bench_memray.profiles</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidocs/asv_bench_memray/asv_bench_memray.__main__.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asv_bench_memray.__main__</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/asv_bench_memray/asv_bench_memray.profiles.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asv_bench_memray.profiles</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -246,12 +246,13 @@
           <section id="asv-memray-benchmark-plugin-documentation">
 <h1>ASV Memray Benchmark Plugin documentation<a class="headerlink" href="#asv-memray-benchmark-plugin-documentation" title="Link to this heading">¶</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">asv_bench_memray</span></code> is an externally defined <code class="docutils literal notranslate"><span class="pre">memray</span></code> benchmark plugin for
-<a class="reference external" href="https://asv.readthedocs.io/en/latest/index.html" title="(in airspeed velocity v0.1.dev318+g7032df701)"><span class="xref std std-doc">asv</span></a> using <a class="reference external" href="https://asv.readthedocs.io/projects/asv-runner/en/latest/index.html" title="(in asv_runner)"><span class="xref std std-doc">asv_runner</span></a>.</p>
+<a class="reference external" href="https://asv.readthedocs.io/en/latest/index.html" title="(in airspeed velocity v0.1.dev188+g1459a8598)"><span class="xref std std-doc">asv</span></a> using <a class="reference external" href="https://asv.readthedocs.io/projects/asv-runner/en/latest/index.html" title="(in asv_runner)"><span class="xref std std-doc">asv_runner</span></a>.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="development.html#conventions">Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#how-a-ray-method-is-constructed">How a <code class="docutils literal notranslate"><span class="pre">ray_*</span></code> method is constructed</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="apidocs/index.html">API Reference</a><ul>
@@ -264,10 +265,10 @@
 <section id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h1>
 <p>In your <code class="docutils literal notranslate"><span class="pre">asv.conf.json</span></code> add the following to the requirements matrix:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;matrix&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;req&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;numpy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;1.21&quot;</span><span class="p">],</span>
-<span class="w">        </span><span class="nt">&quot;asv_plugin_memray&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">"matrix"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"req"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"numpy"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"1.21"</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">"asv_bench_memray"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">""</span><span class="p">]</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="p">},</span>
 </pre></div>
@@ -284,7 +285,7 @@
 </pre></div>
 </div>
 <p>Which should result in something roughly like:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">ASV_RUNNER_PATH</span><span class="o">=</span><span class="s2">&quot;../asv_runner&quot;</span><span class="w"> </span>asv<span class="w"> </span>run<span class="w"> </span>--bench<span class="w"> </span>sum
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nv">ASV_RUNNER_PATH</span><span class="o">=</span><span class="s2">"../asv_runner"</span><span class="w"> </span>asv<span class="w"> </span>run<span class="w"> </span>--bench<span class="w"> </span>sum
 ·<span class="w"> </span>Creating<span class="w"> </span>environments.......
 ·<span class="w"> </span>Discovering<span class="w"> </span>benchmarks
 ··<span class="w"> </span>Uninstalling<span class="w"> </span>from<span class="w"> </span>virtualenv-py3.9-asv_bench_memray.._asv_bench_memray-numpy1.21
@@ -301,9 +302,35 @@
 <span class="w">               </span><span class="m">20000</span><span class="w">     </span><span class="nv">162k</span>
 <span class="w">              </span><span class="o">========</span><span class="w"> </span><span class="o">=======</span>
 
-<span class="nv">ASV_RUNNER_PATH</span><span class="o">=</span><span class="s2">&quot;../asv_runner&quot;</span><span class="w"> </span>asv<span class="w"> </span>run<span class="w"> </span>--bench<span class="w"> </span>sum<span class="w">  </span><span class="m">8</span>.72s<span class="w"> </span>user<span class="w"> </span><span class="m">3</span>.04s<span class="w"> </span>system<span class="w"> </span><span class="m">99</span>%<span class="w"> </span>cpu<span class="w"> </span><span class="m">11</span>.877<span class="w"> </span>total
+<span class="nv">ASV_RUNNER_PATH</span><span class="o">=</span><span class="s2">"../asv_runner"</span><span class="w"> </span>asv<span class="w"> </span>run<span class="w"> </span>--bench<span class="w"> </span>sum<span class="w">  </span><span class="m">8</span>.72s<span class="w"> </span>user<span class="w"> </span><span class="m">3</span>.04s<span class="w"> </span>system<span class="w"> </span><span class="m">99</span>%<span class="w"> </span>cpu<span class="w"> </span><span class="m">11</span>.877<span class="w"> </span>total
 </pre></div>
 </div>
+</section>
+<section id="allocator-tracing-warmup-and-repeat">
+<h1>Allocator tracing, warmup, and repeat<a class="headerlink" href="#allocator-tracing-warmup-and-repeat" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">warmup_time</span></code> and <code class="docutils literal notranslate"><span class="pre">repeat</span></code> use the same attribute names as timing
+benchmarks. Warmup calls run outside the tracker. Each repeat is its own
+memray capture. A <code class="docutils literal notranslate"><span class="pre">repeat</span></code> of 1 (the default) returns that peak as an
+integer. A larger count, or a <code class="docutils literal notranslate"><span class="pre">(min_repeat,</span> <span class="pre">max_repeat,</span> <span class="pre">max_time)</span></code> triple,
+returns samples so asv reports the median. The default warmup is 0 seconds.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ray_trace_python_allocators</span></code> records allocations served by Python’s
+pymalloc allocator. <code class="docutils literal notranslate"><span class="pre">ray_native_traces</span></code> records native stack frames. Both
+default to off. <code class="docutils literal notranslate"><span class="pre">ASV_BENCH_MEMRAY_TRACE_PYTHON_ALLOCATORS</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ASV_BENCH_MEMRAY_NATIVE_TRACES</span></code> apply the switches to every <code class="docutils literal notranslate"><span class="pre">ray_*</span></code>
+benchmark.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyBenchmark</span><span class="p">:</span>
+    <span class="n">warmup_time</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="n">repeat</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ray_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="n">ray_sum</span><span class="o">.</span><span class="n">ray_trace_python_allocators</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">ray_sum</span><span class="o">.</span><span class="n">ray_native_traces</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">asv</span> <span class="pre">run</span> <span class="pre">--quick</span></code> still forces <code class="docutils literal notranslate"><span class="pre">repeat</span> <span class="pre">=</span> <span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">warmup_time</span> <span class="pre">=</span> <span class="pre">0</span></code>.
+When a profile is saved, the HTML is the last sample.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The GitHub repository at <a class="reference external" href="https://github.com/HaoZeke/asv_samples">asv_samples</a> has a dedicated branch for

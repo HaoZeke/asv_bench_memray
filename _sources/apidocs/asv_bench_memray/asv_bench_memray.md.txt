@@ -22,6 +22,6 @@ asv_bench_memray.benchmarks
 :titlesonly:
 :maxdepth: 1
 
-asv_bench_memray.profiles
 asv_bench_memray.__main__
+asv_bench_memray.profiles
 ```

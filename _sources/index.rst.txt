@@ -21,7 +21,7 @@ In your ``asv.conf.json`` add the following to the requirements matrix:
    "matrix": {
        "req": {
            "numpy": ["1.21"],
-           "asv_plugin_memray": [""]
+           "asv_bench_memray": [""]
        },
    },
 
@@ -61,6 +61,35 @@ Which should result in something roughly like:
 
    ASV_RUNNER_PATH="../asv_runner" asv run --bench sum  8.72s user 3.04s system 99% cpu 11.877 total
 
+Allocator tracing, warmup, and repeat
+======================================
+
+``warmup_time`` and ``repeat`` use the same attribute names as timing
+benchmarks. Warmup calls run outside the tracker. Each repeat is its own
+memray capture. A ``repeat`` of 1 (the default) returns that peak as an
+integer. A larger count, or a ``(min_repeat, max_repeat, max_time)`` triple,
+returns samples so asv reports the median. The default warmup is 0 seconds.
+
+``ray_trace_python_allocators`` records allocations served by Python's
+pymalloc allocator. ``ray_native_traces`` records native stack frames. Both
+default to off. ``ASV_BENCH_MEMRAY_TRACE_PYTHON_ALLOCATORS`` and
+``ASV_BENCH_MEMRAY_NATIVE_TRACES`` apply the switches to every ``ray_*``
+benchmark.
+
+.. code:: python
+
+   class MyBenchmark:
+       warmup_time = 0.1
+       repeat = 3
+
+       def ray_sum(self, n):
+           self.data = bytearray(n)
+
+       ray_sum.ray_trace_python_allocators = True
+       ray_sum.ray_native_traces = False
+
+``asv run --quick`` still forces ``repeat = 1`` and ``warmup_time = 0``.
+When a profile is saved, the HTML is the last sample.
 
 .. note::
 

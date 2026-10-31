@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="API Reference" href="apidocs/index.html"><link rel="prev" title="ASV Memray Benchmark Plugin documentation" href="index.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>Development - ASV Memray Benchmark 0.1.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
@@ -199,8 +199,8 @@
 <li class="toctree-l4"><a class="reference internal" href="apidocs/asv_bench_memray/asv_bench_memray.benchmarks.raymem.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asv_bench_memray.benchmarks.raymem</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="apidocs/asv_bench_memray/asv_bench_memray.profiles.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asv_bench_memray.profiles</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidocs/asv_bench_memray/asv_bench_memray.__main__.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asv_bench_memray.__main__</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/asv_bench_memray/asv_bench_memray.profiles.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asv_bench_memray.profiles</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -246,16 +246,16 @@
           <section id="development">
 <h1>Development<a class="headerlink" href="#development" title="Link to this heading">¶</a></h1>
 <p>During development, one needs to pass a relative path:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;matrix&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;req&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;asv_bench_memray&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;../asv_bench_memray&quot;</span><span class="p">]</span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">"matrix"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"req"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"asv_bench_memray"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"../asv_bench_memray"</span><span class="p">]</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="p">},</span>
 </pre></div>
 </div>
 <p>Also it may be necessary to cleanup older environments and explicitly
 point to an instance of <code class="docutils literal notranslate"><span class="pre">asv_runner</span></code>:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-rf<span class="w"> </span>.asv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">ASV_RUNNER_PATH</span><span class="o">=</span><span class="s2">&quot;../asv_runner&quot;</span><span class="w"> </span>asv<span class="w"> </span>run<span class="w"> </span>--bench<span class="w"> </span>sum
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>rm<span class="w"> </span>-rf<span class="w"> </span>.asv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nv">ASV_RUNNER_PATH</span><span class="o">=</span><span class="s2">"../asv_runner"</span><span class="w"> </span>asv<span class="w"> </span>run<span class="w"> </span>--bench<span class="w"> </span>sum
 </pre></div>
 </div>
 <p>Personally I keep benchmarks for testing at an <a class="reference external" href="https://github.com/HaoZeke/asv_experiments">experiments
@@ -270,6 +270,29 @@ will do.</p>
 <li><p>Each exported new benchmark type has the <code class="docutils literal notranslate"><span class="pre">export_as_benchmark</span> <span class="pre">=</span> <span class="pre">[NAMEBenchmark]</span></code> attribute.</p></li>
 </ul>
 <p>For more conventions, follow the documentation of <code class="docutils literal notranslate"><span class="pre">asv_runner</span></code>.</p>
+</section>
+<section id="how-a-ray-method-is-constructed">
+<h2>How a <code class="docutils literal notranslate"><span class="pre">ray_*</span></code> method is constructed<a class="headerlink" href="#how-a-ray-method-is-constructed" title="Link to this heading">¶</a></h2>
+<p>Write an ordinary class. <code class="docutils literal notranslate"><span class="pre">asv_runner</span></code> builds that class with no arguments,
+then wraps each <code class="docutils literal notranslate"><span class="pre">ray_*</span></code> or <code class="docutils literal notranslate"><span class="pre">Ray*</span></code> method as
+<code class="docutils literal notranslate"><span class="pre">RayMemBenchmark(name,</span> <span class="pre">func,</span> <span class="pre">attr_sources)</span></code>. Those three parameters are the
+wrapper constructor. Assigning <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">func</span></code>, and <code class="docutils literal notranslate"><span class="pre">attr_sources</span></code> on
+your class leaves that call empty.</p>
+<p>A subclass of <code class="docutils literal notranslate"><span class="pre">RayMemBenchmark</span></code> is constructed with no arguments too, which raises:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ne">TypeError</span><span class="p">:</span> <span class="n">RayMemBenchmark</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span> <span class="n">missing</span> <span class="mi">3</span> <span class="n">required</span> <span class="n">positional</span> <span class="n">arguments</span><span class="p">:</span> <span class="s1">'name'</span><span class="p">,</span> <span class="s1">'func'</span><span class="p">,</span> <span class="ow">and</span> <span class="s1">'attr_sources'</span>
+</pre></div>
+</div>
+<p>Use a plain class instead:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyBenchmark</span><span class="p">:</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20000</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ray_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The requirements entry is the project <code class="docutils literal notranslate"><span class="pre">asv_bench_memray</span></code>. On a conda
+environment, request <code class="docutils literal notranslate"><span class="pre">pip+asv-bench-memray</span></code> so pip installs the PyPI
+project. The <code class="docutils literal notranslate"><span class="pre">memray-plugin</span></code> branch of <a class="reference external" href="https://github.com/HaoZeke/asv_samples">asv_samples</a> is a working copy of that layout.</p>
 </section>
 </section>
 
@@ -330,6 +353,7 @@ will do.</p>
             <ul>
 <li><a class="reference internal" href="#">Development</a><ul>
 <li><a class="reference internal" href="#conventions">Conventions</a></li>
+<li><a class="reference internal" href="#how-a-ray-method-is-constructed">How a <code class="docutils literal notranslate"><span class="pre">ray_*</span></code> method is constructed</a></li>
 </ul>
 </li>
 </ul>

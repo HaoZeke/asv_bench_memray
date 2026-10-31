@@ -35,6 +35,10 @@
   - ```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem._want_profile
     :summary:
     ```
+* - {py:obj}`_flag <asv_bench_memray.benchmarks.raymem._flag>`
+  - ```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem._flag
+    :summary:
+    ```
 ````
 
 ### Data
@@ -65,6 +69,13 @@
 ```
 ````
 
+````{py:function} _flag(attr_sources, name: str, env: str) -> bool
+:canonical: asv_bench_memray.benchmarks.raymem._flag
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem._flag
+```
+````
+
 `````{py:class} RayMemBenchmark(name, func, attr_sources)
 :canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark
 
@@ -85,6 +96,54 @@ Bases: {py:obj}`asv_runner.benchmarks._base.Benchmark`
    'compile(...)'
 
 ```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark.name_regex
+```
+
+````
+
+````{py:method} _load_run_options() -> None
+:canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark._load_run_options
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark._load_run_options
+```
+
+````
+
+````{py:method} do_setup()
+:canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark.do_setup
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark.do_setup
+```
+
+````
+
+````{py:method} _warmup_seconds() -> float
+:canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark._warmup_seconds
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark._warmup_seconds
+```
+
+````
+
+````{py:method} _repeat_plan()
+:canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark._repeat_plan
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark._repeat_plan
+```
+
+````
+
+````{py:method} _warmup(param) -> None
+:canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark._warmup
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark._warmup
+```
+
+````
+
+````{py:method} _measure_peak(param) -> int
+:canonical: asv_bench_memray.benchmarks.raymem.RayMemBenchmark._measure_peak
+
+```{autodoc2-docstring} asv_bench_memray.benchmarks.raymem.RayMemBenchmark._measure_peak
 ```
 
 ````
