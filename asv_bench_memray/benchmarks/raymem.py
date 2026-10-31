@@ -53,6 +53,60 @@ def _truthy(val) -> bool:
     return str(val).strip().lower() in {"1", "true", "yes", "on"}
 
 
+def capture_format(name):
+    """Memray capture format for a ``ray_file_format`` attribute.
+
+    The Tracker default is ``FileFormat.ALL_ALLOCATIONS`` (every
+    allocation). This plugin passes the format explicitly so a change
+    of that default does not silently change the measurement. ``all``
+    is the plugin default. ``aggregated`` selects
+    ``FileFormat.AGGREGATED_ALLOCATIONS``.
+    """
+    text = str(name if name is not None else "all").strip().lower()
+    if text in {"aggregated", "agg", "aggregated_allocations"}:
+        return memray.FileFormat.AGGREGATED_ALLOCATIONS
+    return memray.FileFormat.ALL_ALLOCATIONS
+
+
+def _write_flamegraph(bin_path: Path, out: Path) -> None:
+    from memray.reporters.flamegraph import FlameGraphReporter
+
+    reader = FileReader(str(bin_path))
+    records = reader.get_high_watermark_allocation_records(merge_threads=True)
+    reporter = FlameGraphReporter.from_snapshot(
+        records,
+        memory_records=tuple(reader.get_memory_snapshots()),
+        native_traces=reader.metadata.has_native_traces,
+    )
+    try:
+        with out.open("w", encoding="utf-8") as fh:
+            reporter.render(
+                outfile=fh,
+                metadata=reader.metadata,
+                show_memory_leaks=False,
+                merge_threads=True,
+                inverted=False,
+            )
+    except Exception:
+        out.unlink(missing_ok=True)
+        raise
+
+
+def _write_stub(out: Path, name: str, exc: BaseException) -> None:
+    detail = f"{type(exc).__name__}: {exc}"
+    out.write_text(
+        (
+            "<!doctype html><html><head><meta charset='utf-8'>"
+            f"<title>memray {name}</title></head><body>"
+            f"<h1>memray peak for {name}</h1>"
+            f"<p>{detail}</p>"
+            "<p>The flamegraph reporter could not be imported.</p>"
+            "</body></html>\n"
+        ),
+        encoding="utf-8",
+    )
+
+
 def _want_profile(attr_sources) -> bool:
     if _truthy(os.environ.get("ASV_BENCH_MEMRAY_PROFILE")):
         return True
@@ -100,6 +154,7 @@ class RayMemBenchmark(Benchmark):
             "ray_native_traces",
             "ASV_BENCH_MEMRAY_NATIVE_TRACES",
         )
+        self.ray_file_format = _get_first_attr(sources, "ray_file_format", "all")
 
     def do_setup(self):
         # setup() may change repeat / warmup; asv --quick injects them too.
@@ -164,11 +219,12 @@ class RayMemBenchmark(Benchmark):
                 destination=memray.FileDestination(tfile_loc, overwrite=True),
                 native_traces=self.ray_native_traces,
                 trace_python_allocators=self.ray_trace_python_allocators,
+                file_format=capture_format(self.ray_file_format),
             ):
                 self.func(*param)
             peak = FileReader(str(tfile_loc)).metadata.peak_memory
             if self.ray_save_profile:
-                self._save_html_report(tfile_loc)
+                self._save_html_report(tfile_loc, param)
             return int(peak)
         finally:
             try:
@@ -195,7 +251,7 @@ class RayMemBenchmark(Benchmark):
             return samples[0]
         return {"samples": samples, "number": 1}
 
-    def _save_html_report(self, bin_path: Path) -> None:
+    def _save_html_report(self, bin_path: Path, param: tuple = ()) -> None:
         from asv_bench_memray.profiles import (
             default_profile_dir,
             profile_path_for,
@@ -203,47 +259,25 @@ class RayMemBenchmark(Benchmark):
         )
 
         profile_dir = default_profile_dir()
-        out = profile_path_for(self.name, profile_dir)
+        rev = os.environ.get("ASV_COMMIT") or None
+        out = profile_path_for(self.name, profile_dir, rev=rev, params=param)
         out.parent.mkdir(parents=True, exist_ok=True)
 
-        # Prefer flamegraph reporter when available; fall back to table.
+        # A missing flamegraph reporter writes a stub. Any other error
+        # propagates so a broken report is not saved as a successful page.
         try:
-            from memray.reporters.flamegraph import FlameGraphReporter
-
-            reader = FileReader(str(bin_path))
-            records = reader.get_high_watermark_allocation_records(merge_threads=True)
-            reporter = FlameGraphReporter.from_snapshot(
-                records,
-                memory_records=tuple(reader.get_memory_snapshots()),
-                native_traces=reader.metadata.has_native_traces,
-            )
-            with out.open("w", encoding="utf-8") as fh:
-                reporter.render(
-                    outfile=fh,
-                    metadata=reader.metadata,
-                    show_memory_leaks=False,
-                    merge_threads=True,
-                    inverted=False,
-                )
-        except Exception:
-            # Minimal fallback so the profiles.json link is never empty.
-            reader = FileReader(str(bin_path))
-            peak = reader.metadata.peak_memory
-            out.write_text(
-                (
-                    "<!doctype html><html><head><meta charset='utf-8'>"
-                    f"<title>memray {self.name}</title></head><body>"
-                    f"<h1>memray peak for {self.name}</h1>"
-                    f"<p>Peak memory: {peak} bytes</p>"
-                    "<p>Install a full memray flamegraph export path if this "
-                    "stub appears (FlameGraphReporter failed).</p>"
-                    "</body></html>\n"
-                ),
-                encoding="utf-8",
-            )
+            _write_flamegraph(bin_path, out)
+        except ImportError as exc:
+            _write_stub(out, self.name, exc)
 
         if out.is_file():
-            register_profile(self.name, out, profile_dir=profile_dir)
+            register_profile(
+                self.name,
+                out,
+                rev=rev,
+                params=param,
+                profile_dir=profile_dir,
+            )
 
 
 export_as_benchmark = [RayMemBenchmark]
