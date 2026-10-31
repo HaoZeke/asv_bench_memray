@@ -2,18 +2,13 @@ name: Publish to PyPI
 on: [push, pull_request]
 jobs:
   pypi-publish:
-    environment:
-      name: pypi
-      url: https://pypi.org/p/asv_bench_memray
-    permissions:
-      id-token: write  # for trusted publishing
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     environment:
       name: pypi
       url: https://pypi.org/p/asv_bench_memray
     permissions:
-      id-token: write
+      id-token: write  # for trusted publishing
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python
