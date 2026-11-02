@@ -1,0 +1,86 @@
+# {py:mod}`asv_bench_memray._version`
+
+```{py:module} asv_bench_memray._version
+```
+
+```{autodoc2-docstring} asv_bench_memray._version
+:allowtitles:
+```
+
+## Module Contents
+
+### Functions
+
+````{list-table}
+:class: autosummary longtable
+:align: left
+
+* - {py:obj}`_pyproject_path <asv_bench_memray._version._pyproject_path>`
+  - ```{autodoc2-docstring} asv_bench_memray._version._pyproject_path
+    :summary:
+    ```
+* - {py:obj}`_version_in_pyproject <asv_bench_memray._version._version_in_pyproject>`
+  - ```{autodoc2-docstring} asv_bench_memray._version._version_in_pyproject
+    :summary:
+    ```
+* - {py:obj}`_version_from_distribution <asv_bench_memray._version._version_from_distribution>`
+  - ```{autodoc2-docstring} asv_bench_memray._version._version_from_distribution
+    :summary:
+    ```
+* - {py:obj}`read_project_version <asv_bench_memray._version.read_project_version>`
+  - ```{autodoc2-docstring} asv_bench_memray._version.read_project_version
+    :summary:
+    ```
+````
+
+### Data
+
+````{list-table}
+:class: autosummary longtable
+:align: left
+
+* - {py:obj}`_VERSION_LINE <asv_bench_memray._version._VERSION_LINE>`
+  - ```{autodoc2-docstring} asv_bench_memray._version._VERSION_LINE
+    :summary:
+    ```
+````
+
+### API
+
+````{py:data} _VERSION_LINE
+:canonical: asv_bench_memray._version._VERSION_LINE
+:value: >
+   'compile(...)'
+
+```{autodoc2-docstring} asv_bench_memray._version._VERSION_LINE
+```
+
+````
+
+````{py:function} _pyproject_path() -> pathlib.Path
+:canonical: asv_bench_memray._version._pyproject_path
+
+```{autodoc2-docstring} asv_bench_memray._version._pyproject_path
+```
+````
+
+````{py:function} _version_in_pyproject(path: pathlib.Path) -> str
+:canonical: asv_bench_memray._version._version_in_pyproject
+
+```{autodoc2-docstring} asv_bench_memray._version._version_in_pyproject
+```
+````
+
+````{py:function} _version_from_distribution() -> str
+:canonical: asv_bench_memray._version._version_from_distribution
+
+```{autodoc2-docstring} asv_bench_memray._version._version_from_distribution
+```
+````
+
+````{py:function} read_project_version(pyproject: pathlib.Path | None = None) -> str
+:canonical: asv_bench_memray._version.read_project_version
+
+```{autodoc2-docstring} asv_bench_memray._version.read_project_version
+```
+````

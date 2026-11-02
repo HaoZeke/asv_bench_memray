@@ -60,3 +60,37 @@ The requirements entry is the project ``asv_bench_memray``. On a conda
 environment, request ``pip+asv-bench-memray`` so pip installs the PyPI
 project. The ``memray-plugin`` branch of `asv_samples
 <https://github.com/HaoZeke/asv_samples>`_ is a working copy of that layout.
+
+Version
+-------
+
+The version is written by hand once, as ``version`` under ``[project]``
+in ``pyproject.toml``. PEP 621 defines that field
+(`version <https://peps.python.org/pep-0621/#version>`_). Hatchling
+publishes the static field
+(`static version <https://hatch.pypa.io/latest/version/#static>`_).
+
+``asv_bench_memray.__version__`` reads that field from a checkout. An
+installed wheel has no ``pyproject.toml``, so it reads the distribution
+metadata instead
+(`importlib.metadata <https://docs.python.org/3/library/importlib.metadata.html>`_).
+Sphinx sets ``release`` from the same reader
+(`release <https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-release>`_).
+
+``tbump.toml`` and the towncrier examples in ``doc/changelog.d/readme.md``
+are generated with cog (`cog <https://nedbatchelder.com/code/cog/>`_).
+Check and regenerate them from the repository root::
+
+   cog --check tbump.toml doc/changelog.d/readme.md
+   cog -r tbump.toml doc/changelog.d/readme.md
+   python tests/test_version_consistency.py
+
+The ``cog`` command comes from the PyPI package ``cogapp``, listed in
+the ``rel`` extra. Releases still use tbump
+(`tbump <https://github.com/your-tools/tbump>`_) and towncrier
+(`towncrier <https://towncrier.readthedocs.io/>`_). tbump edits
+``pyproject.toml``, then its ``before_commit`` hook runs ``cog -r`` so
+the generated copies follow that edit. Fragment files under
+``doc/changelog.d`` stay the changelog source. Past headings in
+``CHANGELOG.md`` are towncrier output for those releases, not a second
+copy of the current version.

@@ -22,6 +22,33 @@ asv_bench_memray.benchmarks
 :titlesonly:
 :maxdepth: 1
 
+asv_bench_memray._version
 asv_bench_memray.__main__
 asv_bench_memray.profiles
 ```
+
+## Package Contents
+
+### Data
+
+````{list-table}
+:class: autosummary longtable
+:align: left
+
+* - {py:obj}`__version__ <asv_bench_memray.__version__>`
+  - ```{autodoc2-docstring} asv_bench_memray.__version__
+    :summary:
+    ```
+````
+
+### API
+
+````{py:data} __version__
+:canonical: asv_bench_memray.__version__
+:value: >
+   'read_project_version(...)'
+
+```{autodoc2-docstring} asv_bench_memray.__version__
+```
+
+````

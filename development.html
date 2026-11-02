@@ -199,6 +199,7 @@
 <li class="toctree-l4"><a class="reference internal" href="apidocs/asv_bench_memray/asv_bench_memray.benchmarks.raymem.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asv_bench_memray.benchmarks.raymem</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="apidocs/asv_bench_memray/asv_bench_memray._version.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asv_bench_memray._version</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidocs/asv_bench_memray/asv_bench_memray.__main__.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asv_bench_memray.__main__</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidocs/asv_bench_memray/asv_bench_memray.profiles.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asv_bench_memray.profiles</span></code></a></li>
 </ul>
@@ -294,6 +295,37 @@ your class leaves that call empty.</p>
 environment, request <code class="docutils literal notranslate"><span class="pre">pip+asv-bench-memray</span></code> so pip installs the PyPI
 project. The <code class="docutils literal notranslate"><span class="pre">memray-plugin</span></code> branch of <a class="reference external" href="https://github.com/HaoZeke/asv_samples">asv_samples</a> is a working copy of that layout.</p>
 </section>
+<section id="version">
+<h2>Version<a class="headerlink" href="#version" title="Link to this heading">¶</a></h2>
+<p>The version is written by hand once, as <code class="docutils literal notranslate"><span class="pre">version</span></code> under <code class="docutils literal notranslate"><span class="pre">[project]</span></code>
+in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>. PEP 621 defines that field
+(<a class="reference external" href="https://peps.python.org/pep-0621/#version">version</a>). Hatchling
+publishes the static field
+(<a class="reference external" href="https://hatch.pypa.io/latest/version/#static">static version</a>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">asv_bench_memray.__version__</span></code> reads that field from a checkout. An
+installed wheel has no <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, so it reads the distribution
+metadata instead
+(<a class="reference external" href="https://docs.python.org/3/library/importlib.metadata.html">importlib.metadata</a>).
+Sphinx sets <code class="docutils literal notranslate"><span class="pre">release</span></code> from the same reader
+(<a class="reference external" href="https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-release">release</a>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">tbump.toml</span></code> and the towncrier examples in <code class="docutils literal notranslate"><span class="pre">doc/changelog.d/readme.md</span></code>
+are generated with cog (<a class="reference external" href="https://nedbatchelder.com/code/cog/">cog</a>).
+Check and regenerate them from the repository root:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cog</span> <span class="o">--</span><span class="n">check</span> <span class="n">tbump</span><span class="o">.</span><span class="n">toml</span> <span class="n">doc</span><span class="o">/</span><span class="n">changelog</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">readme</span><span class="o">.</span><span class="n">md</span>
+<span class="n">cog</span> <span class="o">-</span><span class="n">r</span> <span class="n">tbump</span><span class="o">.</span><span class="n">toml</span> <span class="n">doc</span><span class="o">/</span><span class="n">changelog</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">readme</span><span class="o">.</span><span class="n">md</span>
+<span class="n">python</span> <span class="n">tests</span><span class="o">/</span><span class="n">test_version_consistency</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">cog</span></code> command comes from the PyPI package <code class="docutils literal notranslate"><span class="pre">cogapp</span></code>, listed in
+the <code class="docutils literal notranslate"><span class="pre">rel</span></code> extra. Releases still use tbump
+(<a class="reference external" href="https://github.com/your-tools/tbump">tbump</a>) and towncrier
+(<a class="reference external" href="https://towncrier.readthedocs.io/">towncrier</a>). tbump edits
+<code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, then its <code class="docutils literal notranslate"><span class="pre">before_commit</span></code> hook runs <code class="docutils literal notranslate"><span class="pre">cog</span> <span class="pre">-r</span></code> so
+the generated copies follow that edit. Fragment files under
+<code class="docutils literal notranslate"><span class="pre">doc/changelog.d</span></code> stay the changelog source. Past headings in
+<code class="docutils literal notranslate"><span class="pre">CHANGELOG.md</span></code> are towncrier output for those releases, not a second
+copy of the current version.</p>
+</section>
 </section>
 
         </article>
@@ -354,6 +386,7 @@ project. The <code class="docutils literal notranslate"><span class="pre">memray
 <li><a class="reference internal" href="#">Development</a><ul>
 <li><a class="reference internal" href="#conventions">Conventions</a></li>
 <li><a class="reference internal" href="#how-a-ray-method-is-constructed">How a <code class="docutils literal notranslate"><span class="pre">ray_*</span></code> method is constructed</a></li>
+<li><a class="reference internal" href="#version">Version</a></li>
 </ul>
 </li>
 </ul>
