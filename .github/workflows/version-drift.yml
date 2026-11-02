@@ -1,0 +1,33 @@
+name: Version drift
+
+# Fails when a generated copy disagrees with the handwritten version.
+# cog: https://nedbatchelder.com/code/cog/
+on:
+  push:
+  pull_request:
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    # This job only reads the checkout.
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          # The documentation workflow already uses 3.12. This job
+          # compares version strings, so one interpreter is enough.
+          # The reader itself stays within requires-python >= 3.8.
+          python-version: "3.12"
+      - name: Install cog
+        # PyPI distribution is cogapp; the command is cog.
+        # Pinned to 3.6.0 so a release and this check use the same cog.
+        # https://nedbatchelder.com/code/cog/
+        run: python -m pip install cogapp==3.6.0
+      - name: Check generated copies
+        # Same paths the consistency test discovers. Listed here so the
+        # log shows the cog --check command on its own.
+        run: cog --check tbump.toml doc/changelog.d/readme.md
+      - name: Check version consistency
+        run: python tests/test_version_consistency.py

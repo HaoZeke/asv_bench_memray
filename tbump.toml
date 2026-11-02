@@ -2,7 +2,26 @@
 # github_url = "https://github.com/<user or organization>/<project>/"
 
 [version]
+# Generated from the handwritten version in pyproject.toml.
+# https://nedbatchelder.com/code/cog/
+# [[[cog
+# import sys
+# from pathlib import Path
+# start = Path(cog.inFile).resolve().parent
+# root = start
+# while not (
+#     (root / "pyproject.toml").is_file()
+#     and (root / "asv_bench_memray").is_dir()
+# ):
+#     if root.parent == root:
+#         raise RuntimeError("repository root not found from %s" % start)
+#     root = root.parent
+# sys.path.insert(0, str(root))
+# from asv_bench_memray._version import read_project_version
+# cog.outl('current = "%s"' % read_project_version())
+# ]]]
 current = "0.1.2"
+# [[[end]]]
 
 # Example of a semver regexp.
 # Make sure this matches current_version before
@@ -22,12 +41,22 @@ tag_template = "v{new_version}"
 # For each file to patch, add a [[file]] config
 # section containing the path of the file, relative to the
 # tbump.toml location.
+# The handwritten copy. search limits the edit to the [project] assignment
+# so a dependency constraint that happens to contain the same digits is left
+# alone. {current_version} is tbump's placeholder for the value above.
 [[file]]
-src = "doc/source/conf.py"
+src = "pyproject.toml"
+search = 'version = "{current_version}"'
 
 # You can specify a list of commands to
 # run after the files have been patched
 # and before the git commit is made
+
+# pyproject.toml is already updated. Rewrite the generated copies so they
+# match it. https://nedbatchelder.com/code/cog/
+[[before_commit]]
+name = "Regenerate version copies"
+cmd = "cog -r tbump.toml doc/changelog.d/readme.md"
 
 [[before_commit]]
 name = "Make changelog"
