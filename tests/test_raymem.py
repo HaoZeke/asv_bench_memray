@@ -204,3 +204,117 @@ def test_larger_allocation_has_a_larger_peak():
     small = _bench(alloc_small).run()
     large = _bench(alloc_large).run()
     assert large > small
+
+
+def test_default_capture_format_is_all_allocations():
+    import memray
+
+    assert raymem.capture_format("all") is memray.FileFormat.ALL_ALLOCATIONS
+    assert raymem.capture_format(None) is memray.FileFormat.ALL_ALLOCATIONS
+    assert (
+        raymem.capture_format("aggregated")
+        is memray.FileFormat.AGGREGATED_ALLOCATIONS
+    )
+
+    def alloc():
+        return None
+
+    assert _bench(alloc).ray_file_format == "all"
+
+
+def test_run_passes_file_format_explicitly(monkeypatch):
+    import memray
+
+    seen = {}
+    real = memray.Tracker
+
+    def factory(*args, **kwargs):
+        seen["file_format"] = kwargs.get("file_format")
+        return real(*args, **kwargs)
+
+    monkeypatch.setattr(raymem.memray, "Tracker", factory)
+
+    def alloc():
+        return bytearray(64)
+
+    alloc.ray_file_format = "aggregated"
+    alloc.ray_save_profile = False
+    alloc.warmup_time = 0
+    alloc.repeat = 1
+    _bench(alloc).run()
+    assert seen["file_format"] is memray.FileFormat.AGGREGATED_ALLOCATIONS
+
+
+def test_import_error_writes_stub(tmp_path, monkeypatch):
+    import memray
+
+    bin_path = tmp_path / "cap.bin"
+    with memray.Tracker(bin_path):
+        bytearray(32)
+    monkeypatch.setenv("ASV_BENCH_MEMRAY_PROFILE_DIR", str(tmp_path / "profiles"))
+
+    def missing(*_args, **_kwargs):
+        raise ImportError("no flamegraph")
+
+    monkeypatch.setattr(raymem, "_write_flamegraph", missing)
+
+    def alloc():
+        return None
+
+    bench = _bench(alloc)
+    bench._save_html_report(bin_path, ())
+    html = list(Path(tmp_path / "profiles").glob("*.html"))
+    assert len(html) == 1
+    text = html[0].read_text(encoding="utf-8")
+    assert "ImportError" in text
+    assert "no flamegraph" in text
+
+
+def test_other_report_errors_propagate(tmp_path, monkeypatch):
+    import memray
+
+    bin_path = tmp_path / "cap.bin"
+    with memray.Tracker(bin_path):
+        bytearray(32)
+    monkeypatch.setenv("ASV_BENCH_MEMRAY_PROFILE_DIR", str(tmp_path / "profiles"))
+
+    def broken(*_args, **_kwargs):
+        raise RuntimeError("reporter broke")
+
+    monkeypatch.setattr(raymem, "_write_flamegraph", broken)
+
+    def alloc():
+        return None
+
+    bench = _bench(alloc)
+    with pytest.raises(RuntimeError, match="reporter broke"):
+        bench._save_html_report(bin_path, ())
+    assert list(Path(tmp_path / "profiles").glob("*.html")) == []
+
+
+def test_render_error_removes_partial_html(tmp_path, monkeypatch):
+    import memray
+    from memray.reporters import flamegraph
+
+    bin_path = tmp_path / "cap.bin"
+    with memray.Tracker(bin_path):
+        bytearray(32)
+    monkeypatch.setenv("ASV_BENCH_MEMRAY_PROFILE_DIR", str(tmp_path / "profiles"))
+
+    class Reporter:
+        @classmethod
+        def from_snapshot(cls, *args, **kwargs):
+            return cls()
+
+        def render(self, **kwargs):
+            raise RuntimeError("render broke")
+
+    monkeypatch.setattr(flamegraph, "FlameGraphReporter", Reporter)
+
+    def alloc():
+        return None
+
+    bench = _bench(alloc)
+    with pytest.raises(RuntimeError, match="render broke"):
+        bench._save_html_report(bin_path, ())
+    assert list(Path(tmp_path / "profiles").glob("*.html")) == []
