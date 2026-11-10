@@ -56,9 +56,32 @@ def default_profile_dir(results_dir: str | Path | None = None) -> Path:
     return out
 
 
-def profile_path_for(bench: str, profile_dir: Path | None = None) -> Path:
+def profile_filename(
+    bench: str,
+    rev: str | int | None = None,
+    params: object = None,
+) -> str:
+    """File name for one profile.
+
+    The benchmark name alone is not unique across revisions or parameters,
+    so those are part of the file name when they are known.
+    """
+    parts = [sanitize_name(bench)]
+    if rev not in (None, ""):
+        parts.append(sanitize_name(str(rev)))
+    if params not in (None, (), []):
+        parts.append(sanitize_name(repr(params)))
+    return "_".join(parts) + ".html"
+
+
+def profile_path_for(
+    bench: str,
+    profile_dir: Path | None = None,
+    rev: str | int | None = None,
+    params: object = None,
+) -> Path:
     root = profile_dir if profile_dir is not None else default_profile_dir()
-    return root / f"{sanitize_name(bench)}.html"
+    return root / profile_filename(bench, rev, params)
 
 
 def load_registry(profile_dir: Path) -> dict[str, Any]:
@@ -89,29 +112,35 @@ def register_profile(
     html_path: Path,
     *,
     rev: str | int | None = None,
+    params: object = None,
     profile_dir: Path | None = None,
 ) -> Path:
     root = profile_dir if profile_dir is not None else default_profile_dir()
     root.mkdir(parents=True, exist_ok=True)
-    dest = root / f"{sanitize_name(bench)}.html"
+    stored_rev = None if rev in (None, "") else rev
+    params_repr = None if params in (None, (), []) else repr(params)
+    dest = profile_path_for(bench, root, rev=stored_rev, params=params)
     html_path = Path(html_path)
     if html_path.resolve() != dest.resolve():
         shutil.copy2(html_path, dest)
 
     registry = load_registry(root)
     entries: list[dict[str, Any]] = []
-    for e in registry.get("entries") or []:
-        if e.get("bench") == bench and e.get("rev") in (None, "", rev):
-            continue
-        if e.get("bench") == bench and rev is not None and e.get("rev") == rev:
-            continue
-        entries.append(e)
-
-    entries.append({"bench": bench, "file": dest.name, "kind": KIND})
-    if rev is not None and rev != "":
-        entries.append(
-            {"bench": bench, "file": dest.name, "kind": KIND, "rev": rev}
+    for entry in registry.get("entries") or []:
+        same = (
+            entry.get("bench") == bench
+            and entry.get("rev", None) == stored_rev
+            and entry.get("params", None) == params_repr
         )
+        if not same:
+            entries.append(entry)
+
+    stored: dict[str, Any] = {"bench": bench, "file": dest.name, "kind": KIND}
+    if stored_rev is not None:
+        stored["rev"] = stored_rev
+    if params_repr is not None:
+        stored["params"] = params_repr
+    entries.append(stored)
     registry["entries"] = entries
     save_registry(root, registry)
     return dest
@@ -179,7 +208,8 @@ def publish(
             entry_rev = rev
         if entry_rev not in (None, ""):
             paths[profile_key(str(bench), entry_rev)] = rel
-        paths[str(bench)] = rel
+        else:
+            paths[str(bench)] = rel
 
     write_profiles_json(html_dir, paths)
     return paths
