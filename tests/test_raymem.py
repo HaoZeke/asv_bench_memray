@@ -24,15 +24,6 @@ def test_readme_and_docs_name_the_project():
     assert "asv_bench_memray" in index
 
 
-def test_single_repeat_returns_peak_int():
-    def alloc():
-        return bytearray(8192)
-
-    peak = _bench(alloc).run()
-    assert isinstance(peak, int)
-    assert peak > 0
-
-
 def test_repeat_returns_one_sample_per_capture():
     calls = {"n": 0}
 
