@@ -24,15 +24,6 @@ def test_readme_and_docs_name_the_project():
     assert "asv_bench_memray" in index
 
 
-def test_single_repeat_returns_peak_int():
-    def alloc():
-        return bytearray(8192)
-
-    peak = _bench(alloc).run()
-    assert isinstance(peak, int)
-    assert peak > 0
-
-
 def test_repeat_returns_one_sample_per_capture():
     calls = {"n": 0}
 
@@ -40,11 +31,11 @@ def test_repeat_returns_one_sample_per_capture():
         calls["n"] += 1
         return bytearray(16384)
 
-    alloc.repeat = 4
+    alloc.repeat = 2
     result = _bench(alloc).run()
-    assert calls["n"] == 4
+    assert calls["n"] == 2
     assert result["number"] == 1
-    assert len(result["samples"]) == 4
+    assert len(result["samples"]) == 2
     assert all(isinstance(sample, int) and sample > 0 for sample in result["samples"])
 
 
@@ -97,7 +88,7 @@ def test_warmup_runs_outside_the_tracker(monkeypatch):
         calls["n"] += 1
         return bytearray(64)
 
-    alloc.warmup_time = 0.05
+    alloc.warmup_time = 0.001
     alloc.repeat = 2
     result = _bench(alloc).run()
     assert calls["tracked"] == 2

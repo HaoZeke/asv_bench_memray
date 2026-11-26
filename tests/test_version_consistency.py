@@ -61,6 +61,48 @@ def _tracked_cog_files() -> list[str]:
     return sorted(found)
 
 
+# Sample text, not releases. The strings differ so the reader fails if it
+# returns the tool or urls table, picks one of two project versions, or
+# accepts a project table that has no version.
+_PROJECT_VERSION_CASES = (
+    (
+        "project-table",
+        "\n".join(
+            [
+                "[tool.example]",
+                'version = "8.7.6"',
+                "",
+                "[project]",
+                'name = "sample"',
+                'version = "9.8.7"',
+                "",
+                "[project.urls]",
+                'version = "7.6.5"',
+                "",
+            ]
+        ),
+        "9.8.7",
+    ),
+    (
+        "second-version",
+        "\n".join(
+            [
+                "[project]",
+                'version = "9.8.7"',
+                'version = "8.7.6"',
+                "",
+            ]
+        ),
+        RuntimeError,
+    ),
+    (
+        "missing-version",
+        "[project]\nname = \"sample\"\n",
+        RuntimeError,
+    ),
+)
+
+
 class VersionConsistencyTest(unittest.TestCase):
     def test_checkout_version_matches_runtime(self) -> None:
         handwritten = read_project_version()
@@ -128,55 +170,17 @@ class VersionConsistencyTest(unittest.TestCase):
             completed.stdout + completed.stderr,
         )
 
-    def test_reader_uses_project_table_only(self) -> None:
-        # These three strings are sample text, not releases. They differ
-        # so the assertion fails if the reader returns another table.
-        tool_version = "8.7.6"
-        project_version = "9.8.7"
-        urls_version = "7.6.5"
-        sample = "\n".join(
-            [
-                "[tool.example]",
-                f'version = "{tool_version}"',
-                "",
-                "[project]",
-                'name = "sample"',
-                f'version = "{project_version}"',
-                "",
-                "[project.urls]",
-                f'version = "{urls_version}"',
-                "",
-            ]
-        )
-        with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / "pyproject.toml"
-            path.write_text(sample, encoding="utf-8")
-            self.assertEqual(read_project_version(path), project_version)
-
-    def test_reader_rejects_a_second_project_version(self) -> None:
-        # Two different sample strings. The reader must reject the file
-        # rather than pick one of them.
-        sample = "\n".join(
-            [
-                "[project]",
-                'version = "9.8.7"',
-                'version = "8.7.6"',
-                "",
-            ]
-        )
-        with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / "pyproject.toml"
-            path.write_text(sample, encoding="utf-8")
-            with self.assertRaises(RuntimeError):
-                read_project_version(path)
-
-    def test_reader_rejects_a_missing_version(self) -> None:
-        sample = "[project]\nname = \"sample\"\n"
-        with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / "pyproject.toml"
-            path.write_text(sample, encoding="utf-8")
-            with self.assertRaises(RuntimeError):
-                read_project_version(path)
+    def test_read_project_version_cases(self) -> None:
+        for label, sample, expected in _PROJECT_VERSION_CASES:
+            with self.subTest(case=label):
+                with tempfile.TemporaryDirectory() as tmp:
+                    path = Path(tmp) / "pyproject.toml"
+                    path.write_text(sample, encoding="utf-8")
+                    if isinstance(expected, str):
+                        self.assertEqual(read_project_version(path), expected)
+                    else:
+                        with self.assertRaises(expected):
+                            read_project_version(path)
 
 
 if __name__ == "__main__":
